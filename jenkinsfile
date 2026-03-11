@@ -1,18 +1,16 @@
 pipeline {
     agent any
 
-    environment {
+    /*environment {
         NETLIFY_SITE_ID = '0c25b436-d2ce-4bdc-a80d-ba8d61f11474'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-    }
-
+    }*/
+       
     stages {
             stage('AWS CLI') {
             agent {
                 docker {
                     image 'amazon/aws-cli'
-                    args "--entrypoint=''"
-                    
                 }
             }
             steps {
@@ -21,7 +19,7 @@ pipeline {
                 '''
             }
         }
-        stage('Docker') {
+        /*stage('Docker') {
             steps {
                 sh 'docker build -t my-playwright .'
             }
@@ -95,12 +93,13 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod
                 '''
             }
-        }
+        }*/
 
-   }
-    post {
+   
+    /*post {
         always {
             junit 'jest-results/junit.xml'
         }
-    } 
+    }*/
+    }
 }
