@@ -15,7 +15,7 @@ pipeline {
                 }
             }
             environment {
-                AWS_S3_BUCKET = sandy-demo123xdd
+                AWS_S3_BUCKET = 'sandy-demo123xdd'
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-AWS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
