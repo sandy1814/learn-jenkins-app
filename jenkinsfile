@@ -14,12 +14,15 @@ pipeline {
                     args "--entrypoint=''"
                 }
             }
+            environment {
+                AWS_S3_BUCKET = sandy-demo123xdd
+            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-AWS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
                         echo "hello world for file creation" > index.html
-                        aws s3 cp index.html s3://sandy-demo123xdd/index.html
+                        aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
                        '''
                 }
 
