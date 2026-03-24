@@ -95,7 +95,25 @@ pipeline {
                 } 
             }
         }
-        stage('Deploy') {
+        stage('Deploy staging') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to production... site: ID $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build
+
+                '''
+            }
+        }
+        stage('Deploy Prod') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -121,8 +139,6 @@ pipeline {
                 }
             }
             environment {
-                NETLIFY_SITE_ID = '0c25b436-d2ce-4bdc-a80d-ba8d61f11474'
-                NETLIFY_AUTH_TOKEN = credentials('netlify-token')
                 CI_ENVIRONMENT_URL = 'https://deft-sherbet-bb506e.netlify.app'
             }
             steps {
