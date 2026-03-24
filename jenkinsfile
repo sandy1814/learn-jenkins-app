@@ -89,7 +89,7 @@ pipeline {
                     post {
                         always {
                             junit 'jest-results/junit.xml'
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E HTML ', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 } 
@@ -111,6 +111,30 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --prod
 
                 '''
+            }
+        }
+        stage('prod deploy') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+            environment {
+                NETLIFY_SITE_ID = '0c25b436-d2ce-4bdc-a80d-ba8d61f11474'
+                NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+                CI_ENVIRONMENT_URL = 'https://deft-sherbet-bb506e.netlify.app'
+            }
+            steps {
+                sh '''
+                    npx playwright test --reporter=html
+                   '''
+            }
+            post {
+                always {
+                    junit 'jest-results/junit.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright prod HTML ', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
     }
