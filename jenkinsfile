@@ -43,6 +43,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo "Hello"
                     ls -la
                     node --version
                     npm --version
