@@ -34,7 +34,7 @@ pipeline {
                 sh 'docker build -t my-playwright .'
             }
         }
-        stage('Build') {
+        /*stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -138,7 +138,7 @@ pipeline {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Stage E2E ', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
-        }
+        }*/
         /*stage ('Approval') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -164,7 +164,7 @@ pipeline {
                 '''
             }
         }*/
-        stage('prod E2E') {
+        /*stage('prod E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -192,6 +192,6 @@ pipeline {
                 }
             }
         }
-    }
+    }*/
 }
 
