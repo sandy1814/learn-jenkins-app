@@ -146,7 +146,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Prod') {
+        /*stage('Deploy Prod') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -163,7 +163,7 @@ pipeline {
 
                 '''
             }
-        }
+        }*/
         stage('prod E2E') {
             agent {
                 docker {
@@ -176,6 +176,12 @@ pipeline {
             }
             steps {
                 sh '''
+                    node --version
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to production... site: ID $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
                     npx playwright test --reporter=html
                    '''
             }
