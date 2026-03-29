@@ -1,12 +1,36 @@
 pipeline {
     agent any
 
-    environment {
+    /*environment {
         NETLIFY_SITE_ID = '0c25b436-d2ce-4bdc-a80d-ba8d61f11474'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-    }
+    }*/
        
     stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "Hello"
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+        stage('Build docker image') {
+            steps {
+                sh ' docker build -t myjenkinslearnapp .'
+            }
+        }
         /*stage('AWS CLI') {
             agent {
                 docker {
@@ -27,32 +51,14 @@ pipeline {
                 }
 
             }
-        }*/
+        }
 
         stage('Docker') {
             steps {
                 sh 'docker build -t my-playwright .'
             }
         }
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    echo "Hello"
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
-            }
-        }
+
         stage ('Run test parallel') {
             parallel {
                 stage('Test') {
@@ -116,7 +122,7 @@ pipeline {
                 }
             }
         }
-        /*stage('stage E2E') {
+        stage('stage E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -144,7 +150,7 @@ pipeline {
                     input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
                 }
             }
-        }*/
+        }
         stage('Deploy Prod') {
             agent {
                 docker {
@@ -187,7 +193,7 @@ pipeline {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Prod E2E ', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
-        }
+        }*/
     }
 }
 
