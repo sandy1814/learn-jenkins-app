@@ -35,7 +35,11 @@ pipeline {
                 }
             }
             steps {
-                sh ' docker build -t myjenkinslearnapp .'
+                sh ''' 
+                    'amazon-linux-extras install docker 
+                    'docker build -t myjenkinslearnapp .'
+                                       
+                   ''' 
             }
         }
  
