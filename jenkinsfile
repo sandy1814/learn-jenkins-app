@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Build docker image') {
             steps {
-                sh ' docker build -f .docker/Dockerfile -t myjenkinslearnapp .'
+                sh ' docker build -f docker/Dockerfile -t myjenkinslearnapp .'
             }
         }
         /*stage('AWS CLI') {
