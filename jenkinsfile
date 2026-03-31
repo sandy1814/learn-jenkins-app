@@ -27,6 +27,9 @@ pipeline {
             }
         }
         stage('Build docker image') {
+            environment {
+                DOCKER_API_VERSION = '1.44'
+            }
             agent {
                 docker {
                     image 'amazon/aws-cli'
@@ -36,7 +39,7 @@ pipeline {
             }
             steps {
                 sh ''' 
-                    amazon-linux-extras install docker 
+                    dnf install docker -y 
                     docker build -t myjenkinslearnapp .
                                        
                    ''' 
